@@ -12,12 +12,6 @@ import os.path
 import sys
 
 
-class ColumnAnnotation:
-    def __init__(self, data_tag, rewrite_func):
-        self.data_tag = data_tag
-        self.rewrite_func = rewrite_func
-
-
 class Environment:
     def __init__(self, key):
         self.metric = Metric()
@@ -42,19 +36,17 @@ def get_encryption_key(key_file):
      key and store it in the key file"""
     if not os.path.exists(key_file):
         return generate_encryption_key(key_file)
-    f = open(key_file, "rb")
-    key = f.read()
-    f.close()
+    with open(key_file, "rb") as f:
+        key = f.read()
     if len(key) != KEY_SIZE:
         return generate_encryption_key(key_file)
     return key
 
 
 def generate_encryption_key(key_file):
-    f = open(key_file, "wb")
-    key = get_random_bytes(KEY_SIZE)
-    f.write(key)
-    f.close()
+    with open(key_file, "wb") as f:
+        key = get_random_bytes(KEY_SIZE)
+        f.write(key)
     return key
 
 
