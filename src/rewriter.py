@@ -1,7 +1,7 @@
 from constant import *
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
-from ipaddress import ip_address,ip_network
+from ipaddress import ip_address
 
 
 def rewrite_id(val, metric):

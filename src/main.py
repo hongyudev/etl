@@ -1,15 +1,14 @@
-# Takes 3 arguments.
+# Takes 2 arguments.
 # 1. The input csv file
 # 2. The encryption key file
-# 3. The database address
 
-from Crypto.Cipher import AES
-from Crypto.Random import get_random_bytes
 from constant import *
-import extract
-import os.path
+from load import SqliteLoader
 import rewriter
 import transform
+from Crypto.Random import get_random_bytes
+import csv
+import os.path
 import sys
 
 
@@ -82,14 +81,9 @@ class Metric:
 
 if __name__ == "__main__":
     env = init_env(sys.argv[2])
-    reader = extract.open_csv(sys.argv[1])
-    count = 0
+    reader = csv.DictReader(open(sys.argv[1], newline=''))
+    loader = SqliteLoader()
     for row in reader:
-        print(row)
-        print(transform.transform_row(env, row))
-        print("\n")
-        count += 1
-        if count == 10:
-            pass
-            #break
+        transformed_row = transform.transform_row(env, row)
+        loader.insert([transformed_row])
     env.metric.print()
